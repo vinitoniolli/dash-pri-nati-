@@ -9,6 +9,7 @@ window.dashboardData = {
     { id: "overview", label: "Visão Geral" },
     { id: "funnel", label: "Investimento por Funil" },
     { id: "agencies", label: "Agências" },
+    { id: "highlights", label: "Principais destaques do mês e coisas que acharem pertinentes" },
     { id: "lives", label: "Lives do Kim" },
     { id: "crm", label: "Disparos e CRM" },
     { id: "what-worked", label: "O que funcionou" },
@@ -79,15 +80,25 @@ window.dashboardData = {
     global: {
       name: "GLOBAL",
       period: "Período 30/06–31/07",
-      campaign: {
-        impressions: "114.625",
+      meta: {
+        impressions: "117.728",
         reach: "55.489",
+        ctr: "1,95%",
+        cpc: "R$ 1,60",
+        gasto: "R$ 7.579,86"
+      },
+      google: {
+        impressions: "68.130",
+        ctr: "8,35%",
+        gasto: "R$ 5.169,28"
+      },
+      total: {
+        impressions: "185.858",
         leads: 228,
-        cpl: "R$ 31,52",
+        cpl: "R$ 23,92",
         cpm: "R$ 62,70",
-        ctr: "1,91%",
-        cpc: "R$ 3,29",
-        gasto: "R$ 7.183,00"
+        cpc: "R$ 1,60",
+        gasto: "R$ 12.749,14"
       }
     },
     matheus: {
@@ -139,6 +150,16 @@ window.dashboardData = {
     reading: "Bom volume de entrega e CTR alto — o anúncio chama atenção e gera interação. Ponto de atenção: CPM alto, a entrega está cara, mas o interesse também é maior."
   },
 
+  highlights: {
+    title: "Principais destaques do mês e coisas que acharem pertinentes",
+    items: [
+      "Ajustes e melhorias",
+      "Colocar o feedback das agências, que estão no doc",
+      "Treinamento comercial junto ao time de marketing (validar a abordagem e verificar onde o marketing pode ajudar)",
+      "Acelerar nos criativos e organizar rotina de gravação"
+    ]
+  },
+
   // Lives do Kim: atualize as métricas quando houver novo evento.
   lives: {
     cards: [
@@ -164,6 +185,17 @@ window.dashboardData = {
           { label: "CTR", value: "0,61%" },
           { label: "CPM", value: "R$ 6,98" },
           { label: "Gasto", value: "R$ 147,38" }
+        ]
+      },
+      {
+        title: "Live KIM — 27/07",
+        metrics: [
+          { label: "Impressões", value: "20.171" },
+          { label: "Alcance", value: "19.156" },
+          { label: "CPC", value: "R$ 1,13" },
+          { label: "CTR", value: "0,50%" },
+          { label: "CPM", value: "R$ 5,63" },
+          { label: "Valor gasto", value: "R$ 113,66" }
         ]
       }
     ],
@@ -257,10 +289,44 @@ window.dashboardData = {
     ],
     best: "Conteúdos com colaboradores, dicas práticas e vídeos.",
     worst: "Posts muito motivacionais e pouco conectados à realidade da marca.",
-    feedback: [
-      { agency: "Global", text: "Atenção na parte comercial; preencher a planilha disponibilizada para agilizar otimizações e ajustes nas campanhas." },
-      { agency: "Matheus", text: "Acelerar produção e teste de novos criativos, com mais variações de formato, ângulo e abordagem ao longo da semana, para identificar o que performa melhor, evitar desgaste dos anúncios e escalar mais rápido. Também olhar o processo comercial, especialmente leads que demonstram interesse mas não avançam para a compra." }
-    ]
+    metrics: [
+      {
+        title: "LinkedIn — Kim Paiffer",
+        items: [
+          { label: "Seguidores Kim", value: "" },
+          { label: "Quantidade de post", value: "13" },
+          { label: "Visitas no perfil Kim", value: "164" },
+          { label: "Seguidores novos", value: "4" },
+          { label: "Impressões", value: "5.344" },
+          { label: "Contas alcançadas", value: "4.354" },
+          { label: "Visualizações", value: "4.721" },
+          { label: "Curtidas", value: "130" },
+          { label: "Comentários", value: "13" }
+        ]
+      },
+      {
+        title: "LinkedIn — Atom",
+        items: [
+          { label: "Seguidores", value: "2" },
+          { label: "Quantidade de post", value: "12" },
+          { label: "Visitas no perfil Kim", value: "23" },
+          { label: "Seguidores novos", value: "4" },
+          { label: "Impressões", value: "1.524" },
+          { label: "Contas alcançadas", value: "600" },
+          { label: "Visualizações", value: "948" },
+          { label: "Curtidas", value: "48" },
+          { label: "Comentários", value: "15" }
+        ]
+      }
+    ],
+    blog: {
+      title: "Blog",
+      items: [
+        "21 artigos publicados - todos os dias exceto sábado e domingo",
+        "Estão trabalhando temas solicitados: trading, educação, concurso, cripto, cartão benefício e etc"
+      ]
+    },
+    feedback: [],
   },
 
   // ROI e Destaques: espaço preparado para receber novos dados mensais.
@@ -297,7 +363,7 @@ window.dashboardData = {
         description: "Ação especial de conversão com combo pai+filho, oferta exclusiva e urgência no dia."
       },
       {
-        period: "11/08",
+        period: "06 e 12/08",
         title: "Live KIM",
         description: "Live KIM co-promovida com funil próprio, grupo exclusivo e indicação com prêmios."
       },
@@ -338,11 +404,13 @@ window.dashboardData = {
       },
       {
         heading: "Live KIM",
-        subheading: "11 de agosto",
+        subheading: "06 e 12 de agosto",
         bullets: [
-          "Parceria com G4 Business + Grupo Primo",
-          "Funil próprio: grupo exclusivo + indicação",
-          "Prêmios cumulativos por indicação"
+          "Estratégia chamando pra imersão",
+          "",
+          "Adicionar ações abaixo -",
+          "E-mail chamando pra comunidade vip",
+          "Indicação para live dentro da comunidade"
         ]
       },
       {

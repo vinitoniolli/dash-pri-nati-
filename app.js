@@ -248,14 +248,19 @@ function renderActivePanel() {
           <p class="metric-caption" style="margin-bottom: 10px; color: var(--texto-suave);">${data.agencies.global.period}</p>
           <p class="metric-caption">Imersão Presencial</p>
           <div class="metric-list">
-            <div class="metric-item"><span>Impressões</span><strong>${data.agencies.global.campaign.impressions}</strong></div>
-            <div class="metric-item"><span>Alcance</span><strong>${data.agencies.global.campaign.reach}</strong></div>
-            <div class="metric-item"><span>Leads</span><strong>${data.agencies.global.campaign.leads}</strong></div>
-            <div class="metric-item"><span>CPL</span><strong>${data.agencies.global.campaign.cpl}</strong></div>
-            <div class="metric-item"><span>CPM</span><strong>${data.agencies.global.campaign.cpm}</strong></div>
-            <div class="metric-item"><span>CTR</span><strong>${data.agencies.global.campaign.ctr}</strong></div>
-            <div class="metric-item"><span>CPC</span><strong>${data.agencies.global.campaign.cpc}</strong></div>
-            <div class="metric-item"><span>Gasto</span><strong>${data.agencies.global.campaign.gasto}</strong></div>
+            <div class="metric-item"><span>Impressões Meta</span><strong>${data.agencies.global.meta.impressions}</strong></div>
+            <div class="metric-item"><span>Alcance Meta</span><strong>${data.agencies.global.meta.reach}</strong></div>
+            <div class="metric-item"><span>CTR Meta</span><strong>${data.agencies.global.meta.ctr}</strong></div>
+            <div class="metric-item"><span>CPC</span><strong>${data.agencies.global.meta.cpc}</strong></div>
+            <div class="metric-item"><span>Gasto Meta</span><strong>${data.agencies.global.meta.gasto}</strong></div>
+            <div class="metric-item"><span>Impressões Google</span><strong>${data.agencies.global.google.impressions}</strong></div>
+            <div class="metric-item"><span>CTR Google</span><strong>${data.agencies.global.google.ctr}</strong></div>
+            <div class="metric-item"><span>Gasto Google</span><strong>${data.agencies.global.google.gasto}</strong></div>
+            <div class="metric-item"><span>Total Leads</span><strong>${data.agencies.global.total.leads}</strong></div>
+            <div class="metric-item"><span>Total CPL</span><strong>${data.agencies.global.total.cpl}</strong></div>
+            <div class="metric-item"><span>Total CPM</span><strong>${data.agencies.global.total.cpm}</strong></div>
+            <div class="metric-item"><span>Total CPC</span><strong>${data.agencies.global.total.cpc}</strong></div>
+            <div class="metric-item"><span>Total Gasto</span><strong>${data.agencies.global.total.gasto}</strong></div>
           </div>
         </article>
         <article class="panel-card">
@@ -459,6 +464,22 @@ function renderActivePanel() {
         </article>
       </div>
       <div class="two-col" style="margin-top: 16px;">
+        ${data.social.metrics.map((metric) => `
+          <article class="panel-card">
+            <h3 class="section-title">${metric.title}</h3>
+            <div class="metric-list">
+              ${metric.items.map((item) => `<div class="metric-item"><span>${item.label}</span><strong>${item.value}</strong></div>`).join("")}
+            </div>
+          </article>
+        `).join("")}
+      </div>
+      <article class="panel-card" style="margin-top: 16px;">
+        <h3 class="section-title">${data.social.blog.title}</h3>
+        <div class="metric-list">
+          ${data.social.blog.items.map((item) => `<div class="metric-item"><span>${item}</span></div>`).join("")}
+        </div>
+      </article>
+      <div class="two-col" style="margin-top: 16px;">
         ${data.social.feedback.map((item) => `
           <article class="panel-card">
             <h3 class="section-title">Feedback — ${item.agency}</h3>
@@ -488,6 +509,17 @@ function renderActivePanel() {
     `;
   }
 
+  if (activeTabId === "highlights") {
+    panel.innerHTML = `
+      <article class="panel-card">
+        <h3 class="section-title">${data.highlights.title}</h3>
+        <div class="metric-list">
+          ${data.highlights.items.map((item) => `<div class="metric-item"><span>${item}</span></div>`).join("")}
+        </div>
+      </article>
+    `;
+  }
+
   if (activeTabId === "strategy") {
     panel.innerHTML = `
       <article class="panel-card">
@@ -503,10 +535,6 @@ function renderActivePanel() {
           </div>
         `).join("")}
       </div>
-      <article class="panel-card strategy-note" style="margin-top: 18px;">
-        <h3 class="section-title">Live 11/08 — destaque</h3>
-        <p class="metric-caption">${data.strategy.liveHighlight}</p>
-      </article>
       <div class="strategy-grid" style="margin-top: 24px;">
         ${data.strategy.phases.map((phase) => `
           <article class="panel-card phase-card">
