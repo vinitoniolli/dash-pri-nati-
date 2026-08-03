@@ -1,6 +1,6 @@
 window.dashboardData = {
   // Seção principal: dados gerais do mês e resumo da campanha.
-  title: "Marketing Natiele e Priscila",
+  title: "Marketing - Ações Julho",
   subtitle: "Relatório de Performance · Julho 2025",
   totalInvested: "R$ 47.239,83",
   totalInvestedLabel: "Total investido consolidado",
