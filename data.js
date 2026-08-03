@@ -50,7 +50,7 @@ window.dashboardData = {
       { name: "Instituto IBFP", value: "R$ 1.115,36" },
       { name: "Imersão Presencial", value: "R$ 14.711,20" },
       { name: "Consultoria Financeira", value: "R$ 2.502,27" },
-      { name: "Total", value: "R$ 18.328,83", total: true }
+      { name: "Total", value: "R$ 19.432,34", total: true }
     ],
     observation: "A Imersão Presencial concentra o maior investimento por funil no mês de julho.",
     chart: {
