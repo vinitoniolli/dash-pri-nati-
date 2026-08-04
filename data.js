@@ -382,12 +382,27 @@ window.dashboardData = {
   },
 
   // ROI e Destaques: espaço preparado para receber novos dados mensais.
+  // ROI: `total` é o total pago por agência. `lines` abre esse total por funil
+  // quando houver quebra; sem `total`, o card mostra só a `message`.
   roi: {
-    placeholderTitle: "Aguardando dados de faturamento por agência.",
     cards: [
-      { agency: "Athus", message: "Aguardando dados de faturamento por agência." },
-      { agency: "Global", message: "Aguardando dados de faturamento por agência." },
-      { agency: "Matheus", message: "Aguardando dados de faturamento por agência." }
+      {
+        agency: "Athus",
+        message: "Aguardando dados de faturamento."
+      },
+      {
+        agency: "Global",
+        total: "R$ 13.000,00"
+      },
+      {
+        agency: "Matheus",
+        total: "R$ 10.436,00",
+        lines: [
+          { label: "Imersão", value: "R$ 10.436,00" },
+          { label: "Consultoria", value: "R$ 0,00" },
+          { label: "Instituto IBFP", value: "R$ 0,00" }
+        ]
+      }
     ],
     highlights: [
       "Adicione os destaques em data.js"
@@ -543,9 +558,9 @@ window.dashboardData = {
     "crm-conclusion-card": "Resumo da conclusão do CRM, explicando os principais aprendizados dos canais de WhatsApp, e-mail e SMS.",
     "social-best-worst-card": "Comparação do que mais e menos funcionou no conteúdo social, para ajustar a direção estratégica.",
     "roi-card": "Espaço reservado para ROI por agência; será preenchido quando os dados financeiros estiverem disponíveis.",
-    "roi-athus-card": "Resumo do card Athus na aba ROI, mostrando o status atual de faturamento aguardado.",
-    "roi-global-card": "Resumo do card Global na aba ROI, aguardando os dados de faturamento.",
-    "roi-matheus-card": "Resumo do card Matheus na aba ROI, aguardando os dados de faturamento.",
+    "roi-athus-card": "Card da Athus na aba ROI. O investido está informado, o total pago ainda não.",
+    "roi-global-card": "Total pago à Global no período, ao lado do que foi investido em mídia. Os dois valores são praticamente iguais.",
+    "roi-matheus-card": "Total pago à Matheus, aberto por funil, ao lado do investido em mídia. Só a Imersão teve valor: Consultoria e Instituto IBFP ficaram zeradas.",
     "strategy-card": "Resumo da estratégia de agosto, com foco em vídeos, bastidores e posicionamento do Atom+.",
     "strategy-linkedin-card": "Ação planejada para LinkedIn e o Kim, com foco em conteúdo e posicionamento pessoal.",
     "strategy-atom-card": "Estratégia de marca Atom para reforçar conteúdos educativos e institucional.",

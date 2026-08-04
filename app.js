@@ -147,6 +147,13 @@ function formatPercent(value) {
   return `${value.toFixed(2).replace(/\.00$/, "").replace(".", ",")}%`;
 }
 
+// O investido por agência sai do donut da Visão Geral, para o ROI nunca
+// apresentar um número diferente do resto do dashboard.
+function investedByAgency(agency) {
+  const index = data.overview.donut.labels.indexOf(agency);
+  return index === -1 ? "—" : data.overview.donut.currency[index];
+}
+
 function escapeHtml(text) {
   return String(text).replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[char]));
 }
@@ -615,12 +622,40 @@ function renderActivePanel() {
   }
 
   if (activeTabId === "roi") {
+    const paid = data.roi.cards.filter((card) => card.total);
+    const missing = data.roi.cards.filter((card) => !card.total).map((card) => card.agency);
+    const paidTotal = paid.reduce((sum, card) => sum + parseNumberBR(card.total), 0);
+    const paidCaption = [paid.map((card) => card.agency).join(" + ")]
+      .concat(missing.length ? `${missing.join(", ")} sem dado` : [])
+      .join(" · ");
+
     panel.innerHTML = `
-      <div class="roi-grid">
+      <div class="kpi-grid">
+        <article class="kpi-card">
+          <span class="kpi-label">Investimento total</span>
+          <h3 class="metric-value">${data.totalInvested}</h3>
+          <p class="metric-caption">${data.overview.donut.labels.join(" + ")}</p>
+        </article>
+        <article class="kpi-card">
+          <span class="kpi-label">Total pago</span>
+          <h3 class="metric-value">${formatCurrency(paidTotal)}</h3>
+          <p class="metric-caption">${paidCaption}</p>
+        </article>
+      </div>
+      <div class="roi-grid" style="margin-top: 16px;">
         ${data.roi.cards.map((card) => `
           <article class="panel-card">
             <h3 class="section-title">${card.agency}</h3>
-            <p class="metric-caption">${card.message}</p>
+            ${card.total ? `
+              <span class="kpi-label">Total pago</span>
+              <p class="metric-value">${card.total}</p>
+            ` : `<p class="metric-caption">${card.message}</p>`}
+            <div class="metric-list">
+              <div class="metric-item"><span>Investido no período</span><strong>${investedByAgency(card.agency)}</strong></div>
+              ${(card.lines || []).map((line) => `
+                <div class="metric-item"><span>${line.label}</span><strong>${line.value}</strong></div>
+              `).join("")}
+            </div>
           </article>
         `).join("")}
       </div>
