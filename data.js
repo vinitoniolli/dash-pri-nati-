@@ -1,15 +1,15 @@
 window.dashboardData = {
   // Seção principal: dados gerais do mês e resumo da campanha.
   title: "Marketing - Ações Julho",
-  subtitle: "Relatório de Performance · Julho 2025",
-  totalInvested: "R$ 47.239,83",
+  subtitle: "Relatório de Performance · 01/07 a 03/08 de 2026",
+  totalInvested: "R$ 54.322,18",
   totalInvestedLabel: "Total investido consolidado",
 
   tabs: [
     { id: "overview", label: "Visão Geral" },
     { id: "funnel", label: "Investimento por Funil" },
     { id: "agencies", label: "Agências" },
-    { id: "highlights", label: "Principais destaques do mês e coisas que acharem pertinentes" },
+    { id: "highlights", label: "Ajustes e melhorias" },
     { id: "lives", label: "Lives do Kim" },
     { id: "crm", label: "Disparos e CRM" },
     { id: "what-worked", label: "O que funcionou" },
@@ -22,40 +22,40 @@ window.dashboardData = {
   // Visão Geral: atualize estes números ao fechar o mês.
   overview: {
     kpis: [
-      { label: "Investimento total", value: "R$ 47.239,83", caption: "Athus + Global + Matheus" },
-      { label: "Total de leads", value: "4.099", caption: "Volume consolidado" },
-      { label: "CPL médio geral", value: "R$ 10,47", caption: "Custo por lead" },
-      { label: "Total de disparos/ações", value: "356", caption: "Ações registradas" },
-      { label: "Cancelamentos de e-mail", value: "12.353", caption: "Em julho" }
+      { label: "Investimento total", value: "R$ 54.322,18", caption: "Athus + Global + Matheus" },
+      { label: "Total de leads", value: "4.414", caption: "Volume consolidado" },
+      { label: "CPL médio geral", value: "R$ 12,31", caption: "Custo por lead" },
+      { label: "Total de disparos/ações", value: "435", caption: "Ações registradas" },
+      { label: "Cancelamentos de e-mail", value: "12.353", caption: "No período" }
     ],
     donut: {
       labels: ["Athus", "Global", "Matheus"],
-      values: [29756, 7183, 10300.83],
-      currency: ["R$ 29.756", "R$ 7.183", "R$ 10.300,83"]
+      values: [29756, 12749.14, 11817.04],
+      currency: ["R$ 29.756", "R$ 12.749,14", "R$ 11.817,04"]
     },
     leads: {
       labels: ["Athus", "Matheus", "Global"],
-      values: [3370, 501, 228]
+      values: [3370, 816, 228]
     },
     cpl: {
       labels: ["Athus", "Matheus", "Global"],
-      values: [8.83, 12.13, 31.52],
-      currency: ["R$ 8,83", "R$ 12,13", "R$ 31,52"]
+      values: [8.83, 14.48, 55.92],
+      currency: ["R$ 8,83", "R$ 14,48", "R$ 55,92"]
     }
   },
 
   // Investimento por Funil: ajuste os valores para alterar a tabela e o gráfico.
   funnel: {
     rows: [
-      { name: "Instituto IBFP", value: "R$ 1.115,36" },
-      { name: "Imersão Presencial", value: "R$ 14.711,20" },
-      { name: "Consultoria Financeira", value: "R$ 2.502,27" },
-      { name: "Total", value: "R$ 19.432,34", total: true }
+      { name: "Instituto IBFP", value: "R$ 1.611,60" },
+      { name: "Imersão Presencial", value: "R$ 19.930,95" },
+      { name: "Consultoria Financeira", value: "R$ 3.023,63" },
+      { name: "Total", value: "R$ 24.566,18", total: true }
     ],
-    observation: "A Imersão Presencial concentra o maior investimento por funil no mês de julho.",
+    observation: "A Imersão Presencial concentra o maior investimento por funil no período.",
     chart: {
       labels: ["Instituto IBFP", "Imersão Presencial", "Consultoria Financeira"],
-      values: [1115.36, 14711.2, 2502.27]
+      values: [1611.6, 19930.95, 3023.63]
     }
   },
 
@@ -79,7 +79,7 @@ window.dashboardData = {
     },
     global: {
       name: "GLOBAL",
-      period: "Período 30/06–31/07",
+      period: "Período 01/07–03/08",
       meta: {
         impressions: "117.728",
         reach: "55.489",
@@ -102,6 +102,7 @@ window.dashboardData = {
       }
     },
     matheus: {
+      period: "Período 01/07–03/08",
       campaigns: [
         {
           name: "Instituto IBPF",
@@ -112,7 +113,7 @@ window.dashboardData = {
           cpc: "R$ 1,84",
           ctr: "1,63%",
           cpm: "R$ 30,03",
-          gasto: "R$ 1.115,36"
+          gasto: "R$ 1.611,60"
         },
         {
           name: "Consultoria Financeira",
@@ -123,7 +124,7 @@ window.dashboardData = {
           cpc: "R$ 1,90",
           ctr: "2,25%",
           cpm: "R$ 42,91",
-          gasto: "R$ 2.502,27"
+          gasto: "R$ 3.023,63"
         },
         {
           name: "Imersão Presencial",
@@ -134,10 +135,10 @@ window.dashboardData = {
           cpc: "R$ 1,89",
           ctr: "1,68%",
           cpm: "R$ 31,73",
-          gasto: "R$ 6.683,20"
+          gasto: "R$ 7.181,81"
         }
       ],
-      total: "R$ 10.300,83"
+      total: "R$ 11.817,04"
     },
     radar: {
       labels: ["CTR", "CPM", "CPC"],
@@ -150,13 +151,27 @@ window.dashboardData = {
     reading: "Bom volume de entrega e CTR alto — o anúncio chama atenção e gera interação. Ponto de atenção: CPM alto, a entrega está cara, mas o interesse também é maior."
   },
 
+  // Ajustes e melhorias: feedback por agência. Adicione um grupo para incluir outra.
   highlights: {
-    title: "Principais destaques do mês e coisas que acharem pertinentes",
-    items: [
-      "Ajustes e melhorias",
-      "Colocar o feedback das agências, que estão no doc",
-      "Treinamento comercial junto ao time de marketing (validar a abordagem e verificar onde o marketing pode ajudar)",
-      "Acelerar nos criativos e organizar rotina de gravação"
+    groups: [
+      {
+        agency: "Global",
+        items: [
+          "Preencher planilha - Agilizar otimizações nas campanhas",
+          "Melhorar comunicação entre marketing e comercial",
+          "Acompanhar dados para tomada de decisão"
+        ]
+      },
+      {
+        agency: "Matheus",
+        items: [
+          "Acelerar produção de criativos",
+          "Escalar campanhas com mais rapidez",
+          "Mapear leads interessados que não compraram",
+          "Identificar objeções de compra",
+          "Levantar oportunidades de melhoria na conversão"
+        ]
+      }
     ]
   },
 
@@ -192,6 +207,7 @@ window.dashboardData = {
         metrics: [
           { label: "Impressões", value: "20.171" },
           { label: "Alcance", value: "19.156" },
+          { label: "Visualizações", value: "650" },
           { label: "CPC", value: "R$ 1,13" },
           { label: "CTR", value: "0,50%" },
           { label: "CPM", value: "R$ 5,63" },
@@ -199,23 +215,20 @@ window.dashboardData = {
         ]
       }
     ],
-    chart: {
-      labels: ["15/07", "22/07"],
-      values: [3192, 1855]
-    },
-    highlight: "Queda de 42% nas visualizações entre as duas lives.",
+    // O gráfico lê esta métrica de cada card acima: toda live que tiver o campo
+    // entra automaticamente na comparação.
+    chartMetric: "Visualizações",
+    highlight: "Queda contínua nas visualizações: 42% de 15/07 para 22/07 e mais 65% de 22/07 para 27/07. A terceira live teve 80% menos audiência que a primeira.",
     highlightTone: "alert"
   },
 
   // Disparos e CRM: dados por canal e desempenho das peças.
   crm: {
     summary: {
-      total: 356,
-      whatsapp: 204,
-      email: 127,
-      sms: 25,
-      whatsappPieces: 46,
-      emailPieces: 31
+      total: 435,
+      whatsapp: 250,
+      email: 160,
+      sms: 25
     },
     tags: [
       "Divulgação de live",
@@ -227,20 +240,60 @@ window.dashboardData = {
       "Enquetes de interação"
     ],
     whatsapp: {
-      labels: ["Palpite premiado 05/07", "Live ao vivo 15/07", "Live ao vivo 22/07", "Conteúdo orgânico 18/07"],
-      open: [41.98, 39.1, 41, 53.67],
-      clicks: [39.15, 28, 22.25, 19.1]
+      // Os três arrays são paralelos: para reordenar, mova os três juntos.
+      best: {
+        labels: ["Palpite premiado 05/07", "Live ao vivo 15/07", "Conteúdo orgânico 18/07", "Live ao vivo 22/07"],
+        open: [41.98, 39.1, 53.67, 41],
+        clicks: [39.15, 28, 19.1, 22.25]
+      },
+      topViewRate: [
+        { date: "24/07", base: "Comunidade VIP", message: "Muita gente acabou ficando de fora da última live com o Kim", views: "628", rate: 54 },
+        { date: "25/07", base: "Comunidade VIP", message: "A última live com o Kim foi só o começo", views: "622", rate: 54 },
+        { date: "26/07", base: "Comunidade VIP", message: "É amanhã!", views: "558", rate: 48 },
+        { date: "31/07", base: "Comunidade de Alunos", message: "Amanhã pode não ter mais como garantir", views: "2.121", rate: 47 },
+        { date: "29/07", base: "Comunidade VIP", message: "Você teria vontade de participar de uma imersão presencial com Kim Paiffer?", views: "523", rate: 46 },
+        { date: "31/07", base: "Comunidade de Alunos", message: "As vagas da Imersão 360° estão acabando de verdade", views: "2.079", rate: 46 }
+      ],
+      topClickRate: [
+        { base: "Comunidade VIP", message: "Enquete: você participaria de uma Imersão com Kim?", rate: 26.77 },
+        { base: "Comunidade VIP", message: "Kim aqui. AO VIVO AGORA!", rate: 22.25 },
+        { base: "Comunidade VIP", message: "Falta pouco para a aula ao vivo", rate: 19 },
+        { base: "Comunidade VIP", message: "Começou.", rate: 17.5 },
+        { base: "Comunidade VIP", message: "O que vem depois de uma live que bateu recorde?", rate: 14 }
+      ],
+      topViews: [
+        { date: "29/07", base: "01 Caio", action: "Enquete sobre Imersão presencial", value: "6.513", rate: "11%" },
+        { date: "29/07", base: "05 Caio", action: "Enquete sobre Imersão presencial", value: "5.454", rate: "24%" },
+        { date: "29/07", base: "04 Caio", action: "Enquete sobre Imersão presencial", value: "5.422", rate: "10%" },
+        { date: "27/07", base: "05 Caio", action: "Começou.", value: "3.683", rate: "16%" },
+        { date: "31/07", base: "Comunidade de Alunos", action: "Amanhã pode não ter mais como garantir", value: "2.121", rate: "47%" }
+      ],
+      topClicks: [
+        { date: "29/07", base: "05 Caio", action: "Enquete sobre Imersão presencial", value: "276", rate: "5,06%" },
+        { date: "29/07", base: "04 Caio", action: "Enquete sobre Imersão presencial", value: "202", rate: "3,73%" },
+        { date: "29/07", base: "01 Caio", action: "Enquete sobre Imersão presencial", value: "187", rate: "2,87%" },
+        { date: "29/07", base: "02 Caio", action: "Enquete sobre Imersão presencial", value: "174", rate: "9,45%" },
+        { date: "29/07", base: "Comunidade VIP", action: "Enquete sobre Imersão presencial", value: "140", rate: "26,77%" }
+      ]
     },
     email: {
       points: [
         { date: "01/07", base: "~41.000", opening: "3,82% a 6,55%" },
         { date: "Depois", base: "~472.000 a 483.000", opening: "0,40% a 1,10%" }
       ],
-      absolutes: [
-        { label: "13/07", value: "5.075" },
-        { label: "08/07", value: "4.983" },
-        { label: "06/07", value: "4.661" },
-        { label: "22/07 (Ação Kim)", value: "543 cliques" }
+      topClicks: [
+        { date: "22/07", action: "Ação Kim — “Oi. Sou eu de novo.”", value: "588" },
+        { date: "25/07", action: "Aviso Live — “Isso não foi coincidência”", value: "404" },
+        { date: "28/07", action: "Ação Kim — “Desculpa insistir”", value: "386" },
+        { date: "29/07", action: "Ação Kim — “Só preciso de 5 minutos seus”", value: "373" },
+        { date: "26/07", action: "Aviso Live — “Segunda-feira, 19h. Anota.”", value: "358" }
+      ],
+      topOpens: [
+        { date: "22/07", action: "Oi. Sou eu de novo.", value: "3.736", rate: "0,80%" },
+        { date: "22/07", action: "Você chegou a ver minha mensagem?", value: "3.667", rate: "0,79%" },
+        { date: "22/07", action: "Já tentei 2 vezes hoje.", value: "3.492", rate: "0,75%" },
+        { date: "22/07", action: "Faltam poucas horas!", value: "3.392", rate: "0,73%" },
+        { date: "22/07", action: "Começa daqui a pouco!", value: "3.341", rate: "0,72%" }
       ]
     },
     sms: {
@@ -293,7 +346,6 @@ window.dashboardData = {
       {
         title: "LinkedIn — Kim Paiffer",
         items: [
-          { label: "Seguidores Kim", value: "" },
           { label: "Quantidade de post", value: "13" },
           { label: "Visitas no perfil Kim", value: "164" },
           { label: "Seguidores novos", value: "4" },
@@ -307,10 +359,10 @@ window.dashboardData = {
       {
         title: "LinkedIn — Atom",
         items: [
-          { label: "Seguidores", value: "2" },
+          { label: "Seguidores", value: "12.313" },
           { label: "Quantidade de post", value: "12" },
           { label: "Visitas no perfil Kim", value: "23" },
-          { label: "Seguidores novos", value: "4" },
+          { label: "Seguidores novos (30 dias)", value: "72" },
           { label: "Impressões", value: "1.524" },
           { label: "Contas alcançadas", value: "600" },
           { label: "Visualizações", value: "948" },
@@ -323,7 +375,7 @@ window.dashboardData = {
       title: "Blog",
       items: [
         "21 artigos publicados - todos os dias exceto sábado e domingo",
-        "Estão trabalhando temas solicitados: trading, educação, concurso, cripto, cartão benefício e etc"
+        "Estão sendo trabalhados temas solicitados: trading, educação, concurso, cripto, cartão benefício e etc"
       ]
     },
     feedback: [],
@@ -358,12 +410,12 @@ window.dashboardData = {
         description: "Roda em paralelo com a Imersão: só Stories, sem CTA de compra e baixa frequência."
       },
       {
-        period: "09/08",
+        period: "05/09",
         title: "Dia dos Pais",
         description: "Ação especial de conversão com combo pai+filho, oferta exclusiva e urgência no dia."
       },
       {
-        period: "06 e 12/08",
+        period: "06 e 11/08",
         title: "Live KIM",
         description: "Live KIM co-promovida com funil próprio, grupo exclusivo e indicação com prêmios."
       },
@@ -395,7 +447,7 @@ window.dashboardData = {
       },
       {
         heading: "Dia dos Pais",
-        subheading: "Ação especial · 09/08",
+        subheading: "Ação especial · 05/09",
         bullets: [
           "Combo pai + filho",
           "Oferta válida só no dia",
@@ -404,14 +456,20 @@ window.dashboardData = {
       },
       {
         heading: "Live KIM",
-        subheading: "06 e 12 de agosto",
+        subheading: "06 e 11 de agosto",
         bullets: [
-          "Estratégia chamando pra imersão",
-          "",
-          "Adicionar ações abaixo -",
-          "E-mail chamando pra comunidade vip",
-          "Indicação para live dentro da comunidade"
+          "Estratégia chamando pra imersão"
         ]
+      },
+      {
+        heading: "Live KIM",
+        subheading: "E-mail chamando pra comunidade VIP",
+        bullets: []
+      },
+      {
+        heading: "Live KIM",
+        subheading: "Indicação para live dentro da comunidade",
+        bullets: []
       },
       {
         heading: "Venda Atom+",
@@ -421,9 +479,18 @@ window.dashboardData = {
           "Preço cheio, sem desconto",
           "Campanha de 2 semanas"
         ]
+      },
+      {
+        heading: "Novos funis",
+        subheading: "Entrada em agosto",
+        bullets: [
+          "IBFP — Global",
+          "Entrada do funil do Atom+",
+          "Funis que o Lucas pediu pra entrar"
+        ]
       }
     ],
-    liveHighlight: "Live 11/08 é co-promovida: Landing page própria em matriz.g4business.com — funil de captura em 2 passos, fora dos canais HubSpot/SendFlow da Atom."
+    liveHighlight: ""
   },
 
   cardInfo: {
@@ -445,15 +512,21 @@ window.dashboardData = {
     "agencies-chart": "Gráfico de comparação de CPM, CPC e CTR entre as agências. Ele mostra custos e desempenho lado a lado para análise de eficiência.",
     "live-15-card": "Resumo da live de 15/07, com métricas de alcance, engajamento e custo, usado para avaliar o desempenho do evento.",
     "live-22-card": "Resumo da live de 22/07, para comparar com a transmissão anterior e avaliar tendências de audiência e custo.",
+    "live-27-card": "Resumo da live de 27/07, a terceira do mês, para fechar a leitura de audiência e custo das transmissões de julho.",
     "lives-chart": "Gráfico de visualizações da live, mostrando a diferença de entrega entre os dois eventos.",
     "crm-total-card": "Total de ações no CRM em julho, representando a intensidade do trabalho de disparo no mês.",
     "crm-whatsapp-card": "Volume de ações executadas no WhatsApp, o canal mais engajante do período.",
     "crm-email-card": "Volume de ações executadas por e-mail, indicando a força de envio do canal de leads.",
     "crm-sms-card": "Volume de ações SMS, destacando o uso de mensagens curtas para reforço de campanhas.",
-    "crm-pieces-card": "Quantidade de tipos de peças usadas em WhatsApp e e-mail, mostrando diversidade criativa.",
     "crm-whatsapp-chart": "Gráfico que compara abertura e clique no WhatsApp para as principais mensagens. Mostra quais ações tiveram melhor performance.",
+    "crm-view-rate-card": "As mensagens com maior taxa de visualização. A barra vai de 0 a 100%, então dá para comparar direto com o card de cliques ao lado. Repare que as taxas mais altas vêm da Comunidade VIP, que é a base menor.",
+    "crm-click-rate-card": "As mensagens que mais geraram clique proporcionalmente. As barras são visivelmente menores que as de visualização: abrir é fácil, clicar exige uma ação concreta.",
+    "crm-top-views-card": "Os disparos com maior volume de visualizações em números absolutos. Aqui as listas grandes (Caio) dominam, mesmo com taxa baixa — é o contrário do ranking por taxa.",
+    "crm-top-clicks-card": "Os disparos com maior volume de cliques em números absolutos. Compare a última linha com a primeira: a Comunidade VIP converte cinco vezes melhor em taxa, mas entrega metade dos cliques.",
+    "crm-email-chart-card": "Os cinco melhores disparos de e-mail em cliques e em aberturas. Os dois painéis têm escalas próprias porque as ordens de grandeza são diferentes — centenas de cliques contra milhares de aberturas. As barras de abertura são quase iguais entre si: os assuntos do topo performam todos parecido.",
+    "crm-email-clicks-card": "Os e-mails que mais geraram cliques no período. As linhas de topo são todas de abordagem pessoal e insistente em primeira pessoa — o mesmo padrão que aparece na aba O que funcionou.",
+    "crm-email-opens-card": "Os e-mails com mais aberturas em números absolutos. Repare que o volume é alto e a taxa é baixíssima: a base cresceu muito, então até um bom assunto abre menos de 1%.",
     "crm-email-chart": "Gráfico de abertura de e-mail que demonstra a queda na taxa conforme a base cresceu.",
-    "crm-absolutes-card": "Aberturas absolutas em campanhas selecionadas, para comparar volume bruto de interação.",
     "crm-sms-detail-card": "Performance de SMS por campanha, mostrando que mensagens com benefício direto tiveram melhores cliques.",
     "what-worked-card": "O que funcionou em julho: use este card para explicar o que deve ser mantido na sequência.",
     "what-not-worked-card": "O que não funcionou em julho: pontos de alerta para ajustar a próxima fase.",
@@ -466,7 +539,7 @@ window.dashboardData = {
     "social-feedback-matheus-card": "Feedback para a agência Matheus sobre criativos e processo comercial.",
     "agencies-reading": "Texto de leitura da campanha que explica o insight da aba Agências e as observações de performance.",
     "lives-highlight": "Texto de destaque para as lives, explicando a queda de visualizações e o foco do comparativo.",
-    "crm-types-card": "Descrição dos tipos de ações usados no CRM e como elas compõem a cadência de comunicação.",
+    "crm-types-card": "As narrativas trabalhadas no CRM durante o período: os ângulos de mensagem usados nos disparos e como eles compõem a cadência de comunicação.",
     "crm-conclusion-card": "Resumo da conclusão do CRM, explicando os principais aprendizados dos canais de WhatsApp, e-mail e SMS.",
     "social-best-worst-card": "Comparação do que mais e menos funcionou no conteúdo social, para ajustar a direção estratégica.",
     "roi-card": "Espaço reservado para ROI por agência; será preenchido quando os dados financeiros estiverem disponíveis.",

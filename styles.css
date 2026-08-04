@@ -324,8 +324,9 @@ body::before {
   margin-bottom: 10px;
 }
 
+/* auto-fit para a linha se ajustar ao número de KPIs (5 na Visão Geral, 4 no CRM). */
 .kpi-grid {
-  grid-template-columns: repeat(5, minmax(175px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
 }
 
 .kpi-card,
@@ -400,6 +401,46 @@ body::before {
   height: 240px;
 }
 
+.chart-shell.sm {
+  height: 190px;
+}
+
+.compare-card .section-title {
+  padding-right: 84px;
+}
+
+.small-multiples {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 22px;
+}
+
+.small-multiples.cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.sm-panel {
+  min-width: 0;
+}
+
+.sm-title {
+  margin: 0 0 6px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1rem;
+  color: var(--texto);
+}
+
+.sm-title span {
+  display: block;
+  margin-top: 4px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--texto-suave);
+}
+
 .grid-2 {
   display: grid;
   gap: 16px;
@@ -418,6 +459,12 @@ body::before {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* Sem isto as colunas encostam umas nas outras em tabelas de 3+ colunas. */
+.table-card th + th,
+.table-card td + td {
+  padding-left: 16px;
+}
+
 .table-card th {
   color: var(--texto-suave);
   font-weight: 600;
@@ -425,6 +472,61 @@ body::before {
 
 .table-card tr:last-child td {
   border-bottom: 0;
+}
+
+.table-card th.num,
+.table-card td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.rank-list {
+  display: grid;
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.rank-message {
+  margin: 0 0 6px;
+  color: var(--texto);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.rank-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 7px;
+}
+
+.rank-base {
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+}
+
+.rank-value {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--texto);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.rank-track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.rank-bar {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: #3987e5;
 }
 
 .notice-card {
@@ -563,6 +665,12 @@ body::before {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 980px) {
+  .small-multiples {
+    grid-template-columns: 1fr;
   }
 }
 

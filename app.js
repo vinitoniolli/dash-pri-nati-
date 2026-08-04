@@ -28,17 +28,23 @@ const cardInfoMap = {
   "panel:Leitura da campanha": "agencies-reading",
   "panel:Live Kim — 15/07": "live-15-card",
   "panel:Live Kim — 22/07": "live-22-card",
+  "panel:Live KIM — 27/07": "live-27-card",
   "panel:Comparativo de visualizações": "lives-chart",
   "panel:Ponto de atenção": "lives-highlight",
   "kpi:Ações no total": "crm-total-card",
   "kpi:WhatsApp": "crm-whatsapp-card",
   "kpi:E-mail": "crm-email-card",
   "kpi:SMS": "crm-sms-card",
-  "kpi:Peças": "crm-pieces-card",
-  "panel:Tipos de ação usados": "crm-types-card",
+  "panel:Narrativas trabalhadas": "crm-types-card",
   "panel:Melhores desempenhos no WhatsApp": "crm-whatsapp-chart",
+  "panel:WhatsApp — maiores taxas de visualização": "crm-view-rate-card",
+  "panel:WhatsApp — maiores taxas de clique": "crm-click-rate-card",
+  "panel:WhatsApp — mais visualizações": "crm-top-views-card",
+  "panel:WhatsApp — mais cliques": "crm-top-clicks-card",
+  "panel:E-mail — melhores disparos": "crm-email-chart-card",
+  "panel:E-mail — mais cliques": "crm-email-clicks-card",
+  "panel:E-mail — maiores aberturas": "crm-email-opens-card",
   "panel:Queda da abertura do e-mail": "crm-email-chart",
-  "panel:Aberturas absolutas": "crm-absolutes-card",
   "panel:SMS": "crm-sms-detail-card",
   "panel:Conclusão": "crm-conclusion-card",
   "panel:✅ Funcionou": "what-worked-card",
@@ -60,6 +66,24 @@ const cardInfoMap = {
   "panel:Ações de agosto": "strategy-card",
   "panel:Como apresentar este dashboard": "guide-card"
 };
+
+// Cor por entidade: cada agência mantém a mesma cor em qualquer gráfico.
+// Trio validado para o fundo navy (faixa de luminosidade, croma, separação
+// para daltonismo em todos os pares e contraste >= 3:1).
+const AGENCY_COLORS = {
+  Athus: "#3987e5",
+  Global: "#c98500",
+  Matheus: "#199e70"
+};
+
+const CHART_INK = {
+  primary: "#eaf1ff",
+  muted: "#9bb0d3",
+  grid: "rgba(255, 255, 255, 0.08)"
+};
+
+// Série única: uma cor só para todas as barras — a categoria já está no eixo.
+const SERIES_COLOR = "#3987e5";
 
 function openInfoModal(key, title) {
   const message = data.cardInfo?.[key] || "Informações de ajuda não estão disponíveis para este card.";
@@ -118,9 +142,73 @@ function formatCurrency(value) {
   }).format(value);
 }
 
+// 54 -> "54%", 17.5 -> "17,50%", 26.77 -> "26,77%".
 function formatPercent(value) {
-  return `${value.toFixed(2).replace(".", ",")}%`;
+  return `${value.toFixed(2).replace(/\.00$/, "").replace(".", ",")}%`;
 }
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[char]));
+}
+
+// Lista ranqueada com barra embutida: as mensagens são frases longas demais para
+// virarem rótulo de eixo, então o texto ocupa a linha e a barra mostra a taxa.
+// A barra vai de 0 a 100%, não ao maior valor do painel — assim dá para ver que
+// as taxas de clique são bem menores que as de visualização.
+function rankCard(title, rows, formatValue) {
+  return `
+    <article class="panel-card">
+      <h3 class="section-title">${title}</h3>
+      <div class="rank-list">
+        ${rows.map((row) => `
+          <div class="rank-row">
+            <p class="rank-message">${escapeHtml(row.message)}</p>
+            <div class="rank-meta">
+              <span class="rank-base">${escapeHtml(row.base)}${row.date ? ` · ${row.date}` : ""}</span>
+              <span class="rank-value">${formatValue(row)}</span>
+            </div>
+            <div class="rank-track"><span class="rank-bar" style="width: ${row.rate}%"></span></div>
+          </div>
+        `).join("")}
+      </div>
+    </article>
+  `;
+}
+
+// Tabela orientada a colunas: cada coluna é { key, label, num, strong }.
+// As tabelas de WhatsApp e de e-mail têm formatos diferentes, então a forma
+// vem da lista de colunas e não do corpo da função.
+function dataTable(title, columns, rows) {
+  const cell = (tag, column, content) =>
+    `<${tag}${column.num ? ' class="num"' : ""}>${content}</${tag}>`;
+
+  return `
+    <article class="table-card">
+      <h3 class="section-title">${title}</h3>
+      <table>
+        <thead>
+          <tr>${columns.map((column) => cell("th", column, column.label)).join("")}</tr>
+        </thead>
+        <tbody>
+          ${rows.map((row) => `
+            <tr>${columns.map((column) => {
+              const value = escapeHtml(row[column.key]);
+              return cell("td", column, column.strong ? `<strong>${value}</strong>` : value);
+            }).join("")}</tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </article>
+  `;
+}
+
+const WHATSAPP_VOLUME_COLUMNS = (valueHeading) => [
+  { key: "date", label: "Data" },
+  { key: "base", label: "Base" },
+  { key: "action", label: "Ação" },
+  { key: "value", label: valueHeading, num: true, strong: true },
+  { key: "rate", label: "Taxa", num: true }
+];
 
 function buildTabButtons() {
   tabsTrack.innerHTML = "";
@@ -265,6 +353,7 @@ function renderActivePanel() {
         </article>
         <article class="panel-card">
           <h3 class="section-title">Matheus — ${data.agencies.matheus.campaigns[0].name}</h3>
+          <p class="metric-caption" style="margin-bottom: 10px; color: var(--texto-suave);">${data.agencies.matheus.period}</p>
           <div class="metric-list">
             <div class="metric-item"><span>Impressões</span><strong>${data.agencies.matheus.campaigns[0].impressions}</strong></div>
             <div class="metric-item"><span>Alcance</span><strong>${data.agencies.matheus.campaigns[0].reach}</strong></div>
@@ -281,6 +370,7 @@ function renderActivePanel() {
         ${data.agencies.matheus.campaigns.slice(1).map((campaign) => `
           <article class="panel-card">
             <h3 class="section-title">Matheus — ${campaign.name}</h3>
+            <p class="metric-caption" style="margin-bottom: 10px; color: var(--texto-suave);">${data.agencies.matheus.period}</p>
             <div class="metric-list">
               <div class="metric-item"><span>Impressões</span><strong>${campaign.impressions}</strong></div>
               <div class="metric-item"><span>Alcance</span><strong>${campaign.reach}</strong></div>
@@ -294,9 +384,23 @@ function renderActivePanel() {
           </article>
         `).join("")}
       </div>
-      <article class="panel-card chart-card" style="margin-top: 16px;">
+      <article class="panel-card compare-card" style="margin-top: 16px;">
         <h3 class="section-title">Comparativo de CTR, CPM e CPC</h3>
-        <div class="chart-shell"><canvas id="radarChart"></canvas></div>
+        <p class="metric-caption">Cada métrica tem a sua própria escala. Compare as agências dentro de cada painel — nunca de um painel para o outro.</p>
+        <div class="small-multiples">
+          <div class="sm-panel">
+            <h4 class="sm-title">CPM<span>custo por mil impressões · menor é melhor</span></h4>
+            <div class="chart-shell sm"><canvas id="cpmChart"></canvas></div>
+          </div>
+          <div class="sm-panel">
+            <h4 class="sm-title">CPC<span>custo por clique · menor é melhor</span></h4>
+            <div class="chart-shell sm"><canvas id="cpcChart"></canvas></div>
+          </div>
+          <div class="sm-panel">
+            <h4 class="sm-title">CTR<span>taxa de clique · maior é melhor</span></h4>
+            <div class="chart-shell sm"><canvas id="ctrChart"></canvas></div>
+          </div>
+        </div>
       </article>
       <article class="notice-card" style="margin-top: 16px;">
         <h3 class="section-title">Leitura da campanha</h3>
@@ -336,31 +440,26 @@ function renderActivePanel() {
         <article class="kpi-card">
           <span class="kpi-label">Ações no total</span>
           <h3 class="metric-value">${data.crm.summary.total}</h3>
-          <p class="metric-caption">356 ações registradas</p>
+          <p class="metric-caption">WhatsApp + e-mail + SMS</p>
         </article>
         <article class="kpi-card">
           <span class="kpi-label">WhatsApp</span>
           <h3 class="metric-value">${data.crm.summary.whatsapp}</h3>
-          <p class="metric-caption">204 ações</p>
+          <p class="metric-caption">Ações no período</p>
         </article>
         <article class="kpi-card">
           <span class="kpi-label">E-mail</span>
           <h3 class="metric-value">${data.crm.summary.email}</h3>
-          <p class="metric-caption">127 ações</p>
+          <p class="metric-caption">Ações no período</p>
         </article>
         <article class="kpi-card">
           <span class="kpi-label">SMS</span>
           <h3 class="metric-value">${data.crm.summary.sms}</h3>
-          <p class="metric-caption">25 ações</p>
-        </article>
-        <article class="kpi-card">
-          <span class="kpi-label">Peças</span>
-          <h3 class="metric-value">${data.crm.summary.whatsappPieces} / ${data.crm.summary.emailPieces}</h3>
-          <p class="metric-caption">WhatsApp / E-mail</p>
+          <p class="metric-caption">Ações no período</p>
         </article>
       </div>
       <div class="panel-card" style="margin-top: 16px;">
-        <h3 class="section-title">Tipos de ação usados</h3>
+        <h3 class="section-title">Narrativas trabalhadas</h3>
         <div class="tag-list">
           ${data.crm.tags.map((item) => `<span class="tag-chip">${item}</span>`).join("")}
         </div>
@@ -381,23 +480,48 @@ function renderActivePanel() {
         </article>
       </div>
       <div class="two-col" style="margin-top: 16px;">
-        <article class="panel-card">
-          <h3 class="section-title">Aberturas absolutas</h3>
-          <div class="metric-list">
-            ${data.crm.email.absolutes.map((item) => `
-              <div class="metric-item"><span>${item.label}</span><strong>${item.value}</strong></div>
-            `).join("")}
-          </div>
-        </article>
-        <article class="panel-card">
-          <h3 class="section-title">SMS</h3>
-          <div class="metric-list">
-            ${data.crm.sms.items.map((item) => `
-              <div class="metric-item"><span>${item.label}</span><strong>${item.value}</strong></div>
-            `).join("")}
-          </div>
-        </article>
+        ${rankCard("WhatsApp — maiores taxas de visualização", data.crm.whatsapp.topViewRate, (item) => `${item.views} · ${formatPercent(item.rate)}`)}
+        ${rankCard("WhatsApp — maiores taxas de clique", data.crm.whatsapp.topClickRate, (item) => formatPercent(item.rate))}
       </div>
+      <div class="two-col" style="margin-top: 16px;">
+        ${dataTable("WhatsApp — mais visualizações", WHATSAPP_VOLUME_COLUMNS("Visualizações"), data.crm.whatsapp.topViews)}
+        ${dataTable("WhatsApp — mais cliques", WHATSAPP_VOLUME_COLUMNS("Cliques"), data.crm.whatsapp.topClicks)}
+      </div>
+      <article class="panel-card compare-card" style="margin-top: 16px;">
+        <h3 class="section-title">E-mail — melhores disparos</h3>
+        <p class="metric-caption">Cliques e aberturas têm escalas muito diferentes, então cada painel tem a sua. Os mesmos números estão nas tabelas abaixo.</p>
+        <div class="small-multiples cols-2">
+          <div class="sm-panel">
+            <h4 class="sm-title">Cliques<span>por disparo · maior é melhor</span></h4>
+            <div class="chart-shell sm"><canvas id="emailClicksChart"></canvas></div>
+          </div>
+          <div class="sm-panel">
+            <h4 class="sm-title">Aberturas<span>por disparo · maior é melhor</span></h4>
+            <div class="chart-shell sm"><canvas id="emailOpensChart"></canvas></div>
+          </div>
+        </div>
+      </article>
+      <div class="two-col" style="margin-top: 16px;">
+        ${dataTable("E-mail — mais cliques", [
+          { key: "date", label: "Data" },
+          { key: "action", label: "Ação / título principal" },
+          { key: "value", label: "Cliques", num: true, strong: true }
+        ], data.crm.email.topClicks)}
+        ${dataTable("E-mail — maiores aberturas", [
+          { key: "date", label: "Data" },
+          { key: "action", label: "Título" },
+          { key: "value", label: "Aberturas", num: true, strong: true },
+          { key: "rate", label: "Taxa", num: true }
+        ], data.crm.email.topOpens)}
+      </div>
+      <article class="panel-card" style="margin-top: 16px;">
+        <h3 class="section-title">SMS</h3>
+        <div class="metric-list">
+          ${data.crm.sms.items.map((item) => `
+            <div class="metric-item"><span>${item.label}</span><strong>${item.value}</strong></div>
+          `).join("")}
+        </div>
+      </article>
       <article class="notice-card" style="margin-top: 16px;">
         <h3 class="section-title">Conclusão</h3>
         <p class="metric-caption">${data.crm.conclusion}</p>
@@ -511,12 +635,16 @@ function renderActivePanel() {
 
   if (activeTabId === "highlights") {
     panel.innerHTML = `
-      <article class="panel-card">
-        <h3 class="section-title">${data.highlights.title}</h3>
-        <div class="metric-list">
-          ${data.highlights.items.map((item) => `<div class="metric-item"><span>${item}</span></div>`).join("")}
-        </div>
-      </article>
+      <div class="two-col">
+        ${data.highlights.groups.map((group) => `
+          <article class="panel-card">
+            <h3 class="section-title">Feedback — ${group.agency}</h3>
+            <div class="metric-list">
+              ${group.items.map((item) => `<div class="metric-item"><span>${item}</span></div>`).join("")}
+            </div>
+          </article>
+        `).join("")}
+      </div>
     `;
   }
 
@@ -540,9 +668,11 @@ function renderActivePanel() {
           <article class="panel-card phase-card">
             <span class="phase-tag">${phase.heading}</span>
             <h3 class="section-title">${phase.subheading}</h3>
-            <ul class="phase-list">
-              ${phase.bullets.map((bullet) => `<li>${bullet}</li>`).join("")}
-            </ul>
+            ${phase.bullets.length ? `
+              <ul class="phase-list">
+                ${phase.bullets.map((bullet) => `<li>${bullet}</li>`).join("")}
+              </ul>
+            ` : ""}
           </article>
         `).join("")}
       </div>
@@ -614,6 +744,150 @@ function animateCounters() {
   });
 }
 
+// Escreve o valor na ponta de cada barra, para que nenhum número dependa de hover.
+function valueLabelPlugin(formatter, orientation = "horizontal") {
+  const isHorizontal = orientation === "horizontal";
+
+  return {
+    id: "valueLabels",
+    afterDatasetsDraw(chart) {
+      const { ctx } = chart;
+      ctx.save();
+      ctx.font = '600 12px "Inter", sans-serif';
+      ctx.fillStyle = CHART_INK.primary;
+      ctx.textAlign = isHorizontal ? "left" : "center";
+      ctx.textBaseline = isHorizontal ? "middle" : "bottom";
+
+      chart.getDatasetMeta(0).data.forEach((bar, index) => {
+        const value = formatter(chart.data.datasets[0].data[index]);
+        ctx.fillText(value, isHorizontal ? bar.x + 8 : bar.x, isHorizontal ? bar.y : bar.y - 8);
+      });
+
+      ctx.restore();
+    }
+  };
+}
+
+// "3.192" -> 3192. Os cards guardam os números já formatados em pt-BR.
+function parseNumberBR(text) {
+  const cleaned = String(text).replace(/[^\d,.-]/g, "").replace(/\./g, "").replace(",", ".");
+  const value = parseFloat(cleaned);
+  return Number.isNaN(value) ? null : value;
+}
+
+// Toda live que registrar a métrica escolhida entra no comparativo — assim o
+// gráfico nunca fica defasado em relação aos cards.
+function liveChartPoints() {
+  const metric = data.lives.chartMetric;
+
+  return data.lives.cards
+    .map((card) => {
+      const entry = card.metrics.find((item) => item.label === metric);
+      if (!entry) return null;
+      const value = parseNumberBR(entry.value);
+      if (value === null) return null;
+      return { label: card.title.replace(/^.*—\s*/, ""), value };
+    })
+    .filter(Boolean);
+}
+
+function truncate(text, limit) {
+  return text.length > limit ? `${text.slice(0, limit - 1).trimEnd()}…` : text;
+}
+
+// Barras horizontais com o valor na ponta. Escala própria por gráfico — nunca
+// dois eixos no mesmo plot. `titles` alimenta o tooltip quando o rótulo do eixo
+// vem truncado.
+function createRankedBarChart(canvasId, options) {
+  const { labels, values, color, formatValue, formatTick, tooltipLabel, titles, labelSize = 13 } = options;
+
+  createChart(canvasId, "bar", {
+    labels,
+    datasets: [{
+      data: values,
+      backgroundColor: color,
+      hoverBackgroundColor: color,
+      borderRadius: { topRight: 4, bottomRight: 4 },
+      borderSkipped: false,
+      maxBarThickness: 24
+    }]
+  }, {
+    indexAxis: "y",
+    layout: { padding: { right: 72 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: "#071532",
+        titleColor: "#ffc940",
+        bodyColor: CHART_INK.primary,
+        borderColor: "rgba(255,201,64,0.18)",
+        borderWidth: 1,
+        displayColors: false,
+        padding: 10,
+        callbacks: {
+          title: (items) => (titles ? titles[items[0].dataIndex] : items[0].label),
+          label: (context) => tooltipLabel(context.parsed.x)
+        }
+      }
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        grace: "12%",
+        border: { display: false },
+        grid: { color: CHART_INK.grid },
+        ticks: { color: CHART_INK.muted, maxTicksLimit: 4, callback: formatTick }
+      },
+      y: {
+        border: { display: false },
+        grid: { display: false },
+        ticks: { color: CHART_INK.primary, font: { size: labelSize } }
+      }
+    }
+  }, [valueLabelPlugin(formatValue)]);
+}
+
+// Um painel por métrica: cada uma tem escala própria, então nenhuma escala
+// é compartilhada e o gráfico não sugere correlação entre custo e CTR.
+function createAgencyMetricChart(canvasId, metric, formatValue, formatTick) {
+  const radar = data.agencies.radar;
+  const metricIndex = radar.labels.indexOf(metric);
+  if (metricIndex === -1) return;
+
+  const labels = radar.datasets.map((item) => item.label);
+
+  createRankedBarChart(canvasId, {
+    labels,
+    values: radar.datasets.map((item) => item.values[metricIndex]),
+    color: labels.map((label) => AGENCY_COLORS[label] || AGENCY_COLORS.Athus),
+    formatValue,
+    formatTick,
+    tooltipLabel: (value) => `${metric}: ${formatValue(value)}`
+  });
+}
+
+// O assunto do e-mail é o que interessa no eixo: "Ação Kim — “Desculpa insistir”"
+// vira "Desculpa insistir". Linhas sem trav essão passam intactas.
+function emailSubject(action) {
+  return action.split("—").pop().trim().replace(/[“”"]/g, "");
+}
+
+function createEmailChart(canvasId, rows, unit) {
+  const subjects = rows.map((row) => emailSubject(row.action));
+  const count = (value) => value.toLocaleString("pt-BR");
+
+  createRankedBarChart(canvasId, {
+    labels: subjects.map((subject) => truncate(subject, 26)),
+    titles: subjects,
+    values: rows.map((row) => parseNumberBR(row.value)),
+    color: SERIES_COLOR,
+    formatValue: count,
+    formatTick: count,
+    tooltipLabel: (value) => `${count(value)} ${unit}`,
+    labelSize: 12
+  });
+}
+
 function renderCharts() {
   chartInstances.forEach((chart) => chart.destroy());
   chartInstances = [];
@@ -666,92 +940,89 @@ function renderCharts() {
   }
 
   if (activeTabId === "agencies") {
-    createChart("radarChart", "bar", {
-      labels: ["Athus", "Global", "Matheus"],
-      datasets: [
-        {
-          label: "CPM",
-          data: [16.2, 62.7, 42.0],
-          backgroundColor: ["#1e6fd9", "#ffc940", "#6fa8ff"],
-          borderRadius: 10,
-          order: 2
-        },
-        {
-          label: "CPC",
-          data: [2.0, 3.29, 1.03],
-          backgroundColor: ["rgba(30,111,217,0.4)", "rgba(255,201,64,0.4)", "rgba(111,168,255,0.4)"],
-          borderRadius: 10,
-          order: 2
-        },
-        {
-          label: "CTR",
-          type: "line",
-          data: [1.73, 1.91, 4.10],
-          borderColor: "#ffffff",
-          backgroundColor: "rgba(255,255,255,0.16)",
-          yAxisID: "ctr",
-          tension: 0.35,
-          fill: false,
-          pointRadius: 6,
-          pointBackgroundColor: "#ffffff",
-          order: 1
-        }
-      ]
-    }, {
-      scales: {
-        x: {
-          ticks: { color: "#eaf1ff" },
-          grid: { display: false }
-        },
-        y: {
-          beginAtZero: true,
-          title: { display: true, text: "Custo (R$)", color: "#eaf1ff" },
-          ticks: { color: "#eaf1ff" },
-          grid: { color: "rgba(255,255,255,0.06)" }
-        },
-        ctr: {
-          position: "right",
-          beginAtZero: true,
-          title: { display: true, text: "CTR (%)", color: "#eaf1ff" },
-          ticks: { color: "#eaf1ff", callback: (value) => `${value}%` },
-          grid: { display: false }
-        }
-      },
-      plugins: {
-        legend: { labels: { color: "#eaf1ff" } },
-        tooltip: {
-          callbacks: {
-            label: (context) => {
-              const label = context.dataset.label || "";
-              return `${label}: ${context.formattedValue}${label === "CTR" ? "%" : ""}`;
-            }
-          }
-        }
-      }
-    });
+    const money = (value) => `R$ ${value.toLocaleString("pt-BR")}`;
+    const percent = (value) => `${value.toLocaleString("pt-BR")}%`;
+
+    createAgencyMetricChart("cpmChart", "CPM", formatCurrency, money);
+    createAgencyMetricChart("cpcChart", "CPC", formatCurrency, money);
+    createAgencyMetricChart("ctrChart", "CTR", formatPercent, percent);
   }
 
   if (activeTabId === "lives") {
+    const points = liveChartPoints();
+    const count = (value) => value.toLocaleString("pt-BR");
+
     createChart("livesChart", "bar", {
-      labels: data.lives.chart.labels,
+      labels: points.map((point) => point.label),
       datasets: [{
-        label: "Visualizações",
-        data: data.lives.chart.values,
-        backgroundColor: ["#ffc940", "#1e6fd9"],
-        borderRadius: 10,
-        maxBarThickness: 30
+        label: data.lives.chartMetric,
+        data: points.map((point) => point.value),
+        backgroundColor: SERIES_COLOR,
+        hoverBackgroundColor: SERIES_COLOR,
+        borderRadius: { topLeft: 4, topRight: 4 },
+        borderSkipped: false,
+        maxBarThickness: 24
       }]
-    }, { scales: { y: { beginAtZero: true, ticks: { color: "#eaf1ff" }, grid: { color: "rgba(255,255,255,0.06)" } }, x: { ticks: { color: "#eaf1ff" }, grid: { display: false } } } });
+    }, {
+      layout: { padding: { top: 26 } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: "#071532",
+          titleColor: "#ffc940",
+          bodyColor: CHART_INK.primary,
+          borderColor: "rgba(255,201,64,0.18)",
+          borderWidth: 1,
+          displayColors: false,
+          padding: 10,
+          callbacks: { label: (context) => `${data.lives.chartMetric}: ${count(context.parsed.y)}` }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          border: { display: false },
+          grid: { color: CHART_INK.grid },
+          ticks: { color: CHART_INK.muted, maxTicksLimit: 5, callback: count }
+        },
+        x: {
+          border: { display: false },
+          grid: { display: false },
+          ticks: { color: CHART_INK.primary, font: { size: 13 } }
+        }
+      }
+    }, [valueLabelPlugin(count, "vertical")]);
   }
 
   if (activeTabId === "crm") {
+    const bars = {
+      borderRadius: { topLeft: 4, topRight: 4 },
+      borderSkipped: false,
+      maxBarThickness: 24
+    };
+
     createChart("whatsappChart", "bar", {
-      labels: data.crm.whatsapp.labels,
+      labels: data.crm.whatsapp.best.labels,
       datasets: [
-        { label: "Abertura", data: data.crm.whatsapp.open, backgroundColor: "#ffc940", borderRadius: 8 },
-        { label: "Cliques", data: data.crm.whatsapp.clicks, backgroundColor: "#1e6fd9", borderRadius: 8 }
+        { label: "Abertura", data: data.crm.whatsapp.best.open, backgroundColor: "#c98500", ...bars },
+        { label: "Cliques", data: data.crm.whatsapp.best.clicks, backgroundColor: "#3987e5", ...bars }
       ]
-    }, { scales: { y: { beginAtZero: true, max: 60, ticks: { color: "#eaf1ff", callback: (value) => `${value}%` }, grid: { color: "rgba(255,255,255,0.06)" } }, x: { ticks: { color: "#eaf1ff" }, grid: { display: false } } } });
+    }, {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 60,
+          border: { display: false },
+          grid: { color: CHART_INK.grid },
+          ticks: { color: CHART_INK.muted, callback: (value) => `${value}%` }
+        },
+        x: {
+          border: { display: false },
+          grid: { display: false },
+          ticks: { color: CHART_INK.primary }
+        }
+      }
+    });
 
     createChart("emailChart", "line", {
       labels: ["01/07", "Depois"],
@@ -765,15 +1036,19 @@ function renderCharts() {
         pointBackgroundColor: "#ffc940"
       }]
     }, { scales: { y: { beginAtZero: true, ticks: { color: "#eaf1ff", callback: (value) => `${value}%` }, grid: { color: "rgba(255,255,255,0.06)" } }, x: { ticks: { color: "#eaf1ff" }, grid: { display: false } } } });
+
+    createEmailChart("emailClicksChart", data.crm.email.topClicks, "cliques");
+    createEmailChart("emailOpensChart", data.crm.email.topOpens, "aberturas");
   }
 }
 
-function createChart(canvasId, type, dataSet, options = {}) {
+function createChart(canvasId, type, dataSet, options = {}, plugins = []) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
 
   const chart = new Chart(canvas, {
     type,
+    plugins,
     data: {
       labels: dataSet.labels,
       datasets: dataSet.datasets
@@ -795,16 +1070,19 @@ function createChart(canvasId, type, dataSet, options = {}) {
           borderWidth: 1
         }
       },
-      scales: {
-        y: {
-          grid: { color: "rgba(255,255,255,0.06)" },
-          ticks: { color: "#eaf1ff" }
-        },
-        x: {
-          grid: { color: "rgba(255,255,255,0.06)" },
-          ticks: { color: "#eaf1ff" }
+      // Donut e pizza não têm eixos: sem isto o Chart.js desenha uma escala 0–1.
+      ...(type === "doughnut" || type === "pie" ? {} : {
+        scales: {
+          y: {
+            grid: { color: "rgba(255,255,255,0.06)" },
+            ticks: { color: "#eaf1ff" }
+          },
+          x: {
+            grid: { color: "rgba(255,255,255,0.06)" },
+            ticks: { color: "#eaf1ff" }
+          }
         }
-      },
+      }),
       ...options
     }
   });
@@ -812,5 +1090,16 @@ function createChart(canvasId, type, dataSet, options = {}) {
   chartInstances.push(chart);
 }
 
+// O cabeçalho vem do data.js para não existir um segundo texto no index.html.
+function applyHeader() {
+  const heading = document.querySelector(".header-copy h1");
+  const subtitle = document.querySelector(".header-copy .subtitle");
+
+  document.title = data.title;
+  if (heading) heading.textContent = data.title;
+  if (subtitle) subtitle.textContent = data.subtitle;
+}
+
+applyHeader();
 buildTabButtons();
 renderActivePanel();
